@@ -1,0 +1,6 @@
+@ThreatLens.Api_HostAddress = http://localhost:5183
+
+GET {{ThreatLens.Api_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
