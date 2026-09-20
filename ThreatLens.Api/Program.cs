@@ -23,6 +23,36 @@ app.MapGet("/hello", () =>
     };
 });
 
+app.MapGet("/api/logs", () =>
+{
+    var logs = new List<SecurityLog>
+    {
+        new SecurityLog
+        {
+            IpAddress = "192.168.1.20",
+            TimeStamp = DateTime.UtcNow,
+            EventType = "LOGIN_FAILED",
+            UserName = "admin",
+            Status = "Failed"
+        },
+
+        new SecurityLog
+        {
+            IpAddress = "10.0.0.5",
+            TimeStamp = DateTime.UtcNow,
+            EventType = "LOGIN_SUCCESS",
+            UserName = "burak",
+            Status = "Success"
+        }
+    };
+
+    return logs;
+
+});
+
+
+
+
 app.Run();
 
 
