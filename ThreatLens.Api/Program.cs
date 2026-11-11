@@ -28,6 +28,34 @@ var logs = new List<SecurityLog>
             EventType = "LOGIN_SUCCESS",
             UserName = "burak",
             Status = "Success"
+        },
+
+        // Brute force örneği: aynı IP'den arka arkaya başarısız girişler
+        new SecurityLog
+        {
+            IpAddress = "192.168.1.20",
+            TimeStamp = DateTime.UtcNow.AddMinutes(-1),
+            EventType = "LOGIN_FAILED",
+            UserName = "admin",
+            Status = "Failed"
+        },
+
+        new SecurityLog
+        {
+            IpAddress = "192.168.1.20",
+            TimeStamp = DateTime.UtcNow.AddMinutes(-2),
+            EventType = "LOGIN_FAILED",
+            UserName = "root",
+            Status = "Failed"
+        },
+
+        new SecurityLog
+        {
+            IpAddress = "192.168.1.20",
+            TimeStamp = DateTime.UtcNow.AddMinutes(-3),
+            EventType = "LOGIN_FAILED",
+            UserName = "administrator",
+            Status = "Failed"
         }
 };
 
@@ -60,8 +88,22 @@ app.MapPost("/api/logs", (SecurityLog newLog) =>
     return Results.Created("/api/logs", newLog);
 });
 
+// Brute force tespiti: aynı IP'den 3 veya daha fazla başarısız giriş varsa alarm ver
+app.MapGet("/api/alerts/bruteforce", () =>
+{
+    var alerts = logs
+        .Where(log => log.EventType == "LOGIN_FAILED")
+        .GroupBy(log => log.IpAddress)
+        .Where(group => group.Count() >= 3)
+        .Select(group => new
+        {
+            IpAddress = group.Key,
+            FailedAttempts = group.Count(),
+            TargetUsers = group.Select(log => log.UserName).Distinct(),
+            Severity = "High"
+        });
 
+    return alerts;
+});
 
 app.Run();
-
-
