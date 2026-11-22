@@ -11,8 +11,9 @@ The project is at an early stage. Only the parts listed under "What works now" e
 - `GET /api/logs` returns the stored security logs (two sample logs are seeded at startup).
 - `POST /api/logs` adds a new security log and returns `201 Created`.
 - Swagger UI and OpenAPI document in the Development environment.
+- GET /api/alerts/bruteforce groups failed logins by IP and returns a High-severity alert for any IP with 3 or more failed attempts, listing the targeted usernames.
 
-Logs are kept in an in-memory list, so they are lost when the API stops. There is no database, authentication or threat detection yet.
+Logs are kept in an in-memory list, so they are lost when the API stops. There is no database or authentication yet.
 
 ## Tech stack
 
@@ -49,4 +50,4 @@ Not implemented yet:
 - RabbitMQ for asynchronous log ingestion
 - Docker setup
 - xUnit tests
-- Threat detection rules (e.g. brute-force login detection)
+- More threat detection rules
